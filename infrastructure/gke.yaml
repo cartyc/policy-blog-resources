@@ -49,10 +49,10 @@ spec:
     enabled: false
   verticalPodAutoscaling:
     enabled: true
-  privateClusterConfig:
-    enablePrivateEndpoint: false
-    enablePrivateNodes: true
-    masterIpv4CidrBlock: 172.16.0.0/28
+  # privateClusterConfig:
+  #   enablePrivateEndpoint: false
+  #   enablePrivateNodes: true
+  #   masterIpv4CidrBlock: 172.16.0.0/28
   nodeConfig:
     diskSizeGb: 100
     diskType: pd-standard
