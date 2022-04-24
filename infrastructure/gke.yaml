@@ -1,0 +1,91 @@
+apiVersion: container.cnrm.cloud.google.com/v1beta1
+kind: ContainerCluster
+metadata:
+  name: data-location-demo
+  namespace: config-control
+  labels:
+    availability: medium
+spec:
+  description: Test Cluster
+  location: us-east1
+  initialNodeCount: 1
+  defaultMaxPodsPerNode: 110
+  networkRef:
+    name: demo-net
+  networkingMode: VPC_NATIVE
+  subnetworkRef:
+    name: demo-subnet
+  ipAllocationPolicy:
+    servicesSecondaryRangeName: servicesrange
+    clusterSecondaryRangeName: clusterrange
+  clusterAutoscaling:
+    enabled: true
+    autoscalingProfile: BALANCED
+    resourceLimits:
+    - resourceType: cpu
+      maximum: 100
+      minimum: 10
+    - resourceType: memory
+      maximum: 1000
+      minimum: 100
+  maintenancePolicy:
+    dailyMaintenanceWindow:
+      startTime: 00:00
+  releaseChannel:
+    channel: STABLE
+  enableBinaryAuthorization: true
+  enableIntranodeVisibility: true
+  enableShieldedNodes: true
+  addonsConfig:
+    networkPolicyConfig:
+      disabled: false
+    dnsCacheConfig:
+      enabled: true
+    configConnectorConfig:
+      enabled: true
+  networkPolicy:
+    enabled: true
+  podSecurityPolicyConfig:
+    enabled: false
+  verticalPodAutoscaling:
+    enabled: true
+  privateClusterConfig:
+    enablePrivateEndpoint: false
+    enablePrivateNodes: true
+    masterIpv4CidrBlock: 172.16.0.0/28
+  nodeConfig:
+    diskSizeGb: 100
+    diskType: pd-standard
+    imageType: COS_CONTAINERD
+    machineType: e2-standard-4 # kpt-set: ${machineType}
+    oauthScopes:
+      - "https://www.googleapis.com/auth/logging.write"
+      - "https://www.googleapis.com/auth/monitoring"
+    preemptible: false
+---
+apiVersion: compute.cnrm.cloud.google.com/v1beta1
+kind: ComputeNetwork
+metadata:
+  name: demo-net
+  namespace: config-control
+spec:
+  routingMode: REGIONAL
+  autoCreateSubnetworks: false
+---
+apiVersion: compute.cnrm.cloud.google.com/v1beta1
+kind: ComputeSubnetwork
+metadata:
+  name: demo-subnet
+  namespace: config-control
+spec:
+  ipCidrRange: 10.2.0.0/24
+  region: us-east1
+  networkRef:
+    name: demo-net
+  privateIpGoogleAccess: true
+  secondaryIpRange:
+  - rangeName: servicesrange
+    ipCidrRange: 10.3.0.0/16
+  - rangeName: clusterrange
+    ipCidrRange: 10.4.0.0/16
+---
