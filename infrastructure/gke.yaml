@@ -42,7 +42,7 @@ spec:
     dnsCacheConfig:
       enabled: true
     configConnectorConfig:
-      enabled: true
+      enabled: false
   networkPolicy:
     enabled: true
   podSecurityPolicyConfig:
