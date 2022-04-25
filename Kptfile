@@ -1,9 +1,9 @@
 apiVersion: kpt.dev/v1
 kind: Kptfile
 metadata:
-  name: guardrails
+  name: Policy Blog Resources
 info:
-  description: sample description
+  description: Resources for demonstrating Policy Controller and KCC
 pipeline:
   validators:
     - image: gcr.io/kpt-fn/kubeval:v0.2
